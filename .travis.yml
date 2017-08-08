@@ -7,3 +7,4 @@ before_script:
 script:
 - mvn clean install
 - mvn site
+- ls -a
