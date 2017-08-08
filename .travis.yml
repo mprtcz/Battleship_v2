@@ -1,5 +1,10 @@
 language: java
 sudo: required
+deploy:
+  local_dir: target/site
+  provider: pages
+  skip_cleanup: true
+  github_token: qJhDeGoLnfvnz1sK1X2z # Set in travis-ci.org dashboard
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
@@ -8,8 +13,3 @@ script:
 - mvn clean install
 - mvn site
 - ls -a
-deploy:
-  local_dir: target/site
-  provider: pages
-  skip_cleanup: true
-  github_token: qJhDeGoLnfvnz1sK1X2z # Set in travis-ci.org dashboard
