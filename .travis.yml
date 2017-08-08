@@ -1,14 +1,6 @@
 language: java
 sudo: required
-script:
-  - sudo apt-get install python-software-properties
-  - yes "" | sudo add-apt-repository ppa:webupd8team/java
-  - sudo apt-get update
-  - sudo apt-get install oracle-java8-installer
-  - yes "0" | sudo update-alternatives --config java
-  - yes "0" | sudo update-alternatives --config javac
-  - echo $JAVA_HOME
-  - java -version
-  - whereis java
-  - mvn clean install
-  - mvn site
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
