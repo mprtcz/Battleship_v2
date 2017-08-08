@@ -13,4 +13,6 @@ deploy:
   local_dir: target/site
   provider: pages
   skip_cleanup: true
+  tags: true
+  all_branches: true
   github_token: qJhDeGoLnfvnz1sK1X2z # Set in travis-ci.org dashboard
