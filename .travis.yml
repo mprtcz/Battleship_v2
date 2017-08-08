@@ -8,3 +8,10 @@ script:
 - mvn clean install
 - mvn site
 - ls -a
+deploy:
+  local_dir: /target/site
+  provider: pages
+  skip_cleanup: true
+  github_token: qJhDeGoLnfvnz1sK1X2z # Set in travis-ci.org dashboard
+  on:
+    branch: master
