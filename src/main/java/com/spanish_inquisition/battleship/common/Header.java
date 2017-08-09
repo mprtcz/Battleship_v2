@@ -19,6 +19,7 @@ public enum Header {
     PLAYER_TURN,
     OPPONENT_TURN,
     GAME_WON,
+    SCORE,
     DECIDE_ON_MOVE,
     MOVE_REGULAR,
     RESPONSE_HIT,

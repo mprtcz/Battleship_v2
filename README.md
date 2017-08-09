@@ -44,3 +44,5 @@ Reports will be created in:
 # TODO List
 
 [Trello playersBoard](https://trello.com/b/ONK9r1ZU/battleships)
+
+[Plugin Reports for current build](https://mprtcz.github.io/Battleship_v2/)

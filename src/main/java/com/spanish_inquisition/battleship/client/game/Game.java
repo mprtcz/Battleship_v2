@@ -8,6 +8,7 @@ import com.spanish_inquisition.battleship.client.network.SocketClient;
 import com.spanish_inquisition.battleship.common.Header;
 import com.spanish_inquisition.battleship.common.NetworkMessage;
 import com.spanish_inquisition.battleship.common.Styles;
+import javafx.scene.control.ListView;
 
 import java.util.Arrays;
 
@@ -25,6 +26,7 @@ public class Game {
     OpponentBoardController opponentBoardController;
     private StatusController statusController;
     private boolean isGameRunning = true;
+    private ListView<String> scoreListView;
 
     public void setStatusController(StatusController statusController) {
         this.statusController = statusController;
@@ -73,6 +75,10 @@ public class Game {
                     continue;
                 }
                 switch (message.getHeader()) {
+                    case SCORE: {
+                        //TODO impl display of score
+                        break;
+                    }
                     case FLEET_VALID: {
                         // inform that fleet is valid and proceed
                         break;
@@ -181,5 +187,13 @@ public class Game {
 
     public void stopGameRunning() {
         isGameRunning = false;
+    }
+
+    public void setScoreListView(ListView<String> scoreListView) {
+        this.scoreListView = scoreListView;
+    }
+
+    void displayScore(String score) {
+        scoreListView.getItems().add(score);
     }
 }

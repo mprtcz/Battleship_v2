@@ -8,10 +8,7 @@ import com.spanish_inquisition.battleship.client.network.SocketClient;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -26,9 +23,9 @@ import static com.spanish_inquisition.battleship.common.AppLogger.logger;
 
 /**
  * @author Michal_Partacz
- * A controller for a fxml file placed in resources folder.
- * The methods annotated with @FXML react to events specified
- * in the file's UI elements.
+ *         A controller for a fxml file placed in resources folder.
+ *         The methods annotated with @FXML react to events specified
+ *         in the file's UI elements.
  */
 public class MainMenuController {
 
@@ -64,6 +61,8 @@ public class MainMenuController {
     BorderPane mainBorderPane;
     @FXML
     ProgressIndicator socketProgressIndicator;
+    @FXML
+    ListView<String> scoresListView;
 
     SocketClient socketClient;
     Game game;
@@ -103,6 +102,7 @@ public class MainMenuController {
 
     private void setUpSocketConnection() {
         this.game = new Game();
+        game.setScoreListView(scoresListView);
         game.setStatusController(new StatusController(playersLabel));
         socketProgressIndicator.setVisible(true);
         try {

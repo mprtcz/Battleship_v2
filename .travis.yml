@@ -17,7 +17,7 @@ deploy:
   github_token: $OAUTHKEY
   on:
     branch:
-    - db-further-work #specify current branch
+    - client-players-display #specify current branch
     - master
 env:
   global:
