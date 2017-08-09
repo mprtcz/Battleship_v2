@@ -42,4 +42,8 @@ public class Player {
     public Ship pullDestroyedShip() {
         return fleet.pullDestroyedShip();
     }
+
+    public String getName() {
+        return client.getName();
+    }
 }

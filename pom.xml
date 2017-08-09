@@ -57,6 +57,7 @@
         <!--Dependencies versions-->
         <testng.version>6.11</testng.version>
         <mockito.version>1.10.19</mockito.version>
+        <h2db.version>1.4.196</h2db.version>
         <!--Reporting plugins versions-->
         <findbugs.version>3.0.4</findbugs.version>
         <checkstyle.version>2.17</checkstyle.version>
@@ -93,6 +94,13 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2db.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <reporting>
