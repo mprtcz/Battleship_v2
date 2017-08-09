@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NetworkMessage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.common</a> &gt; <span class="el_source">NetworkMessage.java</span></div><h1>NetworkMessage.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.common;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * @author Michal_Partacz
+ */
+public class NetworkMessage {
+    public static final String RESPONSE_SPLIT_CHARACTER = &quot;;&quot;;
+    public static final String RESPONSE_HEADER_SPLIT_CHARACTER = &quot;:&quot;;
+
+    private Header header;
+    private String body;
+
+    public Header getHeader() {
+<span class="nc" id="L18">        return header;</span>
+    }
+
+    public String getBody() {
+<span class="nc" id="L22">        return body;</span>
+    }
+
+<span class="fc" id="L25">    public NetworkMessage(Header header, String body) {</span>
+<span class="fc" id="L26">        this.header = header;</span>
+<span class="fc" id="L27">        this.body = body;</span>
+<span class="fc" id="L28">    }</span>
+
+<span class="nc" id="L30">    public static class Parser {</span>
+
+        public static List&lt;NetworkMessage&gt; parseServerResponse(String rawResponse) {
+<span class="fc" id="L33">            String[] responses = rawResponse.split(RESPONSE_SPLIT_CHARACTER);</span>
+<span class="fc" id="L34">            return Arrays.stream(responses).map(Parser::parseSingleResponse).collect(Collectors.toList());</span>
+        }
+
+        static NetworkMessage parseSingleResponse(String rawSingleResponse) {
+<span class="fc" id="L38">            String[] responseParts = rawSingleResponse.split(RESPONSE_HEADER_SPLIT_CHARACTER);</span>
+<span class="fc" id="L39">            Header header = Header.parseResponseHeader(responseParts[0]);</span>
+<span class="fc" id="L40">            String body = &quot;&quot;;</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            if (responseParts.length &gt; 1) {</span>
+<span class="fc" id="L42">                body = responseParts[1];</span>
+            }
+<span class="fc" id="L44">            return new NetworkMessage(header, body);</span>
+        }
+
+        public static String parseMessageToString(NetworkMessage networkMessage) {
+<span class="nc" id="L48">            return networkMessage.getHeader() + RESPONSE_HEADER_SPLIT_CHARACTER +</span>
+<span class="nc" id="L49">                    networkMessage.getBody() + RESPONSE_SPLIT_CHARACTER;</span>
+        }
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L55">        return &quot;NetworkMessage{&quot; + &quot;header=&quot; + header + &quot;, body='&quot; + body + '\'' + '}';</span>
+    }
+
+    @Override
+    public boolean equals(Object o) {
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (this == o) {</span>
+<span class="nc" id="L61">            return true;</span>
+        }
+<span class="pc bpc" id="L63" title="2 of 4 branches missed.">        if (o == null || getClass() != o.getClass()) {</span>
+<span class="nc" id="L64">            return false;</span>
+        }
+<span class="fc" id="L66">        NetworkMessage that = (NetworkMessage) o;</span>
+<span class="pc bpc" id="L67" title="4 of 8 branches missed.">        return header == that.header &amp;&amp; (body != null ? body.equals(that.body) : that.body == null);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        int result = header != null ? header.hashCode() : 0;</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        result = 31 * result + (body != null ? body.hashCode() : 0);</span>
+<span class="nc" id="L74">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

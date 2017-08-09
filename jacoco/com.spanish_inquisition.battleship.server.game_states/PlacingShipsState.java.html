@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PlacingShipsState.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.server.game_states</a> &gt; <span class="el_source">PlacingShipsState.java</span></div><h1>PlacingShipsState.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.server.game_states;
+
+import com.spanish_inquisition.battleship.common.Header;
+import com.spanish_inquisition.battleship.common.NetworkMessage;
+import com.spanish_inquisition.battleship.server.Player;
+import com.spanish_inquisition.battleship.server.Players;
+import com.spanish_inquisition.battleship.server.bus.MessageBus;
+import com.spanish_inquisition.battleship.server.database.DatabaseController;
+import com.spanish_inquisition.battleship.server.database.PlayerEntity;
+import com.spanish_inquisition.battleship.server.database.PlayerEntityController;
+import com.spanish_inquisition.battleship.server.fleet.FleetBuilder;
+import com.spanish_inquisition.battleship.server.fleet.FleetValidator;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import static com.spanish_inquisition.battleship.common.AppLogger.DEFAULT_LEVEL;
+import static com.spanish_inquisition.battleship.common.AppLogger.logger;
+import static com.spanish_inquisition.battleship.server.BattleshipServer.SERVER_ID;
+
+public class PlacingShipsState extends GameState {
+    public PlacingShipsState(Players players, MessageBus requestBus) {
+<span class="fc" id="L23">        super(players, requestBus);</span>
+<span class="fc" id="L24">    }</span>
+
+    @Override
+    public GameState transform() {
+<span class="fc" id="L28">        List&lt;Player&gt; notReadyPlayers = new LinkedList&lt;&gt;(players.getBothPlayers());</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        while (!notReadyPlayers.isEmpty()) {</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">            for (Player player : notReadyPlayers) {</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">                if (requestBus.haveMessageFromSender(player.getPlayerId())) {</span>
+<span class="fc" id="L32">                    resolvePlayerFleetValidation(player, notReadyPlayers);</span>
+                }
+<span class="fc" id="L34">            }</span>
+        }
+<span class="fc" id="L36">        sendPlayersScores();</span>
+<span class="fc" id="L37">        return new PlayerActionState(players, requestBus);</span>
+    }
+
+    private void resolvePlayerFleetValidation(Player player, List&lt;Player&gt; notReadyPlayers) {
+<span class="fc" id="L41">        String fleetMessage = requestBus.getMessageFrom(player.getPlayerId()).getContent();</span>
+<span class="fc" id="L42">        boolean isValidFleet = validateFleet(fleetMessage);</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        if (isValidFleet) {</span>
+<span class="fc" id="L44">            player.setFleet(new FleetBuilder().build(fleetMessage));</span>
+<span class="fc" id="L45">            notReadyPlayers.remove(player);</span>
+<span class="fc" id="L46">            requestBus.addMessage(SERVER_ID, player.getPlayerId(), Header.FLEET_VALID.name());</span>
+        } else {
+<span class="nc" id="L48">            requestBus.addMessage(SERVER_ID, player.getPlayerId(), Header.FLEET_INVALID.name());</span>
+        }
+<span class="fc" id="L50">    }</span>
+
+    private boolean validateFleet(String fleetMessage) {
+<span class="pc bpc" id="L53" title="2 of 4 branches missed.">        return fleetMessage.contains(Header.FLEET_REQUEST.name()) &amp;&amp; FleetValidator.validate(fleetMessage);</span>
+    }
+
+    public void sendPlayersScores() {
+<span class="fc" id="L57">        PlayerEntityController playerEntityController = new PlayerEntityController(new DatabaseController());</span>
+<span class="fc" id="L58">        List&lt;PlayerEntity&gt; playerRecords = playerEntityController.getPlayersFromDB();</span>
+<span class="fc" id="L59">        logger.log(DEFAULT_LEVEL, &quot;Read records from db:&quot; + playerRecords);</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        for (PlayerEntity playerEntity: playerRecords) {</span>
+<span class="nc" id="L61">            NetworkMessage networkMessage = new NetworkMessage(Header.SCORE, playerEntity.getReadyToSendRepresentation());</span>
+<span class="nc" id="L62">            requestBus.addMessage(SERVER_ID, players.getCurrentPlayer().getPlayerId(), NetworkMessage.Parser.parseMessageToString(networkMessage));</span>
+<span class="nc" id="L63">            requestBus.addMessage(SERVER_ID, players.getOpponentOf(players.getCurrentPlayer()).getPlayerId(),</span>
+<span class="nc" id="L64">                    NetworkMessage.Parser.parseMessageToString(networkMessage));</span>
+<span class="nc" id="L65">        }</span>
+<span class="fc" id="L66">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

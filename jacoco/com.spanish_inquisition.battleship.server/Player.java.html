@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Player.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.server</a> &gt; <span class="el_source">Player.java</span></div><h1>Player.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.server;
+
+import com.spanish_inquisition.battleship.server.fleet.Fleet;
+import com.spanish_inquisition.battleship.server.fleet.Ship;
+
+import static com.spanish_inquisition.battleship.common.AppLogger.DEFAULT_LEVEL;
+import static com.spanish_inquisition.battleship.common.AppLogger.logger;
+
+public class Player {
+    private ClientConnectionHandler client;
+    private Fleet fleet;
+
+<span class="fc" id="L13">    public Player(ClientConnectionHandler client) {</span>
+<span class="fc" id="L14">        this.client = client;</span>
+<span class="fc" id="L15">    }</span>
+
+    public int getPlayerId() {
+<span class="fc" id="L18">        return client.getClientId();</span>
+    }
+
+    public void setFleet(Fleet fleet) {
+<span class="fc" id="L22">        logger.log(DEFAULT_LEVEL, &quot;Setting players fleet &quot; + fleet.toString());</span>
+<span class="fc" id="L23">        this.fleet = fleet;</span>
+<span class="fc" id="L24">    }</span>
+
+    public Fleet getFleet() {
+<span class="fc" id="L27">        return fleet;</span>
+    }
+
+    public boolean hasNoFleet() {
+<span class="fc" id="L31">        return fleet.hasNoShips();</span>
+    }
+
+    public boolean fleetGotHit(Integer targetedField) {
+<span class="fc" id="L35">        return fleet.pointIsClaimedByFleet(targetedField);</span>
+    }
+
+    public boolean gotDestroyedShip() {
+<span class="nc" id="L39">        return fleet.hasCurrentDestroyedShip();</span>
+    }
+
+    public Ship pullDestroyedShip() {
+<span class="nc" id="L43">        return fleet.pullDestroyedShip();</span>
+    }
+
+    public String getName() {
+<span class="nc" id="L47">        return client.getName();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

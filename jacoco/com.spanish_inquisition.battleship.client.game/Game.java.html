@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Game.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.client.game</a> &gt; <span class="el_source">Game.java</span></div><h1>Game.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.client.game;
+
+import com.spanish_inquisition.battleship.client.StatusController;
+import com.spanish_inquisition.battleship.client.board.boardcontroller.OpponentBoardController;
+import com.spanish_inquisition.battleship.client.board.boardcontroller.PlayerBoardController;
+import com.spanish_inquisition.battleship.client.network.ResponsesBus;
+import com.spanish_inquisition.battleship.client.network.SocketClient;
+import com.spanish_inquisition.battleship.common.Header;
+import com.spanish_inquisition.battleship.common.NetworkMessage;
+import com.spanish_inquisition.battleship.common.Styles;
+import javafx.scene.control.ListView;
+
+import java.util.Arrays;
+
+import static com.spanish_inquisition.battleship.common.AppLogger.DEFAULT_LEVEL;
+import static com.spanish_inquisition.battleship.common.AppLogger.logger;
+
+/**
+ * @author Michal_Partacz
+ */
+<span class="fc" id="L21">public class Game {</span>
+    private SocketClient socketClient;
+    private ResponsesBus responsesBus;
+    private static final int GAME_LOOP_SLEEP = 100;
+    PlayerBoardController playerBoardController;
+    OpponentBoardController opponentBoardController;
+    private StatusController statusController;
+<span class="fc" id="L28">    private boolean isGameRunning = true;</span>
+    private ListView&lt;String&gt; scoreListView;
+
+    public void setStatusController(StatusController statusController) {
+<span class="fc" id="L32">        this.statusController = statusController;</span>
+<span class="fc" id="L33">    }</span>
+
+    public void buildPlayersBoard(PlayerBoardController boardController) {
+<span class="fc" id="L36">        logger.log(DEFAULT_LEVEL, &quot;Building player's board&quot;);</span>
+<span class="fc" id="L37">        this.playerBoardController = boardController;</span>
+<span class="fc" id="L38">        boardController.buildBoard();</span>
+<span class="fc" id="L39">    }</span>
+
+    public void buildOpponentsBoard(OpponentBoardController boardController) {
+<span class="fc" id="L42">        logger.log(DEFAULT_LEVEL, &quot;Building opponent's board&quot;);</span>
+<span class="fc" id="L43">        this.opponentBoardController = boardController;</span>
+<span class="fc" id="L44">        boardController.buildBoard();</span>
+<span class="fc" id="L45">    }</span>
+
+    public void setSocketClient(SocketClient socketClient) {
+<span class="nc" id="L48">        this.socketClient = socketClient;</span>
+<span class="nc" id="L49">        this.responsesBus = socketClient.getResponsesBus();</span>
+<span class="nc" id="L50">    }</span>
+
+    public void placePlayersShips() {
+        //TODO: consider lazy initialization in loggers since they all accept Suppliers
+<span class="nc" id="L54">        logger.log(DEFAULT_LEVEL, &quot;Setting fleet for player&quot;);</span>
+<span class="nc" id="L55">        playerBoardController.placeShips();</span>
+<span class="nc" id="L56">    }</span>
+
+    public String getShipPlacementForServer() {
+<span class="nc" id="L59">        return playerBoardController.getFleetMessageForServer();</span>
+    }
+
+    public void sendTheFleetToServer() {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (socketClient != null) {</span>
+<span class="nc" id="L64">            socketClient.sendStringToServer(getShipPlacementForServer());</span>
+        }
+<span class="nc" id="L66">    }</span>
+
+    public void runTheGame() throws InterruptedException, NullPointerException {
+        game_loop:
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        while (isGameRunning) {</span>
+<span class="nc" id="L71">            Thread.sleep(GAME_LOOP_SLEEP);</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (this.responsesBus.hasServerResponses()) {</span>
+<span class="nc" id="L73">                NetworkMessage message = this.responsesBus.getAServerResponse();</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">                if (message == null) {</span>
+<span class="nc" id="L75">                    continue;</span>
+                }
+<span class="nc bnc" id="L77" title="All 14 branches missed.">                switch (message.getHeader()) {</span>
+                    case SCORE: {
+                        //TODO impl display of score
+<span class="nc" id="L80">                        displayScore(message.getBody());</span>
+<span class="nc" id="L81">                        break;</span>
+                    }
+                    case FLEET_VALID: {
+                        // inform that fleet is valid and proceed
+<span class="nc" id="L85">                        break;</span>
+                    }
+                    case FLEET_INVALID: {
+                        // inform that fleet is invalid and retry
+<span class="nc" id="L89">                        break;</span>
+                    }
+                    case PLAYER_TURN: {
+<span class="nc" id="L92">                        statusController.setPlayersLabel(&quot;Your turn!&quot;);</span>
+<span class="nc" id="L93">                        opponentBoardController.setBoardDisabled(false);</span>
+<span class="nc" id="L94">                        break;</span>
+                    }
+                    case DECIDE_ON_MOVE: {
+                        // wait for target point from player
+<span class="nc" id="L98">                        break;</span>
+                    }
+                    case RESPONSE_HIT: {
+                        // recolor targeted point on opponent's board
+<span class="nc" id="L102">                        int index = Integer.parseInt(message.getBody());</span>
+<span class="nc" id="L103">                        opponentBoardController.colorBoardTile(index, Styles.RESPONSE_HIT);</span>
+<span class="nc" id="L104">                        break;</span>
+                    }
+                    case RESPONSE_MISS: {
+                        // recolor targeted point on opponent's board
+<span class="nc" id="L108">                        int index = Integer.parseInt(message.getBody());</span>
+<span class="nc" id="L109">                        opponentBoardController.colorBoardTile(index, Styles.RESPONSE_MISS);</span>
+<span class="nc" id="L110">                        break;</span>
+                    }
+                    case RESPONSE_DESTROYED_SHIP: {
+                        // recolor destroyed ship points on opponent's board
+<span class="nc" id="L114">                        String msg = message.getBody();</span>
+<span class="nc" id="L115">                        String destroyedFieldsString = msg.substring(msg.indexOf('[') + 1, msg.indexOf(']'));</span>
+<span class="nc" id="L116">                        String[] destroyedFieldsToParse = destroyedFieldsString.split(&quot;,&quot;);</span>
+<span class="nc" id="L117">                        Arrays.stream(destroyedFieldsToParse)</span>
+<span class="nc" id="L118">                                .map(field -&gt; Integer.parseInt(field.trim()))</span>
+<span class="nc" id="L119">                                .forEach(index -&gt; opponentBoardController.colorBoardTile(index, Styles.RESPONSE_DESTROYED));</span>
+<span class="nc" id="L120">                        break;</span>
+                    }
+                    case OPPONENT_TURN: {
+<span class="nc" id="L123">                        statusController.setPlayersLabel(&quot;Wait for opponent move...&quot;);</span>
+<span class="nc" id="L124">                        opponentBoardController.setBoardDisabled(true);</span>
+<span class="nc" id="L125">                        break;</span>
+                    }
+                    case RESPONSE_OPPONENT_HIT: {
+                        // recolor targeted point on player's board
+<span class="nc" id="L129">                        int index = Integer.parseInt(message.getBody());</span>
+<span class="nc" id="L130">                        playerBoardController.colorBoardTile(index, Styles.RESPONSE_HIT);</span>
+<span class="nc" id="L131">                        break;</span>
+                    }
+                    case RESPONSE_OPPONENT_MISS: {
+                        // recolor targeted point on player's board
+<span class="nc" id="L135">                        int index = Integer.parseInt(message.getBody());</span>
+<span class="nc" id="L136">                        playerBoardController.colorBoardTile(index, Styles.RESPONSE_MISS);</span>
+<span class="nc" id="L137">                        break;</span>
+                    }
+                    case RESPONSE_OPPONENT_DESTROYED_SHIP: {
+                        // recolor destroyed ship points on player's board
+<span class="nc" id="L141">                        String msg = message.getBody();</span>
+<span class="nc" id="L142">                        String destroyedFieldsString = msg.substring(msg.indexOf('[') + 1, msg.indexOf(']'));</span>
+<span class="nc" id="L143">                        String[] destroyedFieldsToParse = destroyedFieldsString.split(&quot;,&quot;);</span>
+<span class="nc" id="L144">                        Arrays.stream(destroyedFieldsToParse)</span>
+<span class="nc" id="L145">                                .map(field -&gt; Integer.parseInt(field.trim()))</span>
+<span class="nc" id="L146">                                .forEach(index -&gt; playerBoardController.colorBoardTile(index, Styles.RESPONSE_DESTROYED));</span>
+<span class="nc" id="L147">                        break;</span>
+                    }
+                    case GAME_WON: {
+<span class="nc" id="L150">                        opponentBoardController.setBoardDisabled(true);</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                        if (message.getBody().equals(&quot;true&quot;)) {</span>
+<span class="nc" id="L152">                            statusController.setPlayersLabel(&quot;You have won!&quot;);</span>
+                        } else {
+<span class="nc" id="L154">                            statusController.setPlayersLabel(&quot;You lost!&quot;);</span>
+                        }
+<span class="nc" id="L156">                        closeSocketConnection();</span>
+<span class="nc" id="L157">                        break game_loop;/*notify the player he won or lost */</span>
+                    }
+                    default: {
+                        break;
+
+                    }
+                }
+<span class="nc" id="L164">            }</span>
+        }
+<span class="nc" id="L166">    }</span>
+
+    public void closeSocketConnection() {
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (socketClient != null) {</span>
+<span class="nc" id="L170">            socketClient.closeTheSocketClient();</span>
+        }
+<span class="nc" id="L172">    }</span>
+
+    public void makeAMove(Integer tileIndex) {
+<span class="nc" id="L175">        logger.log(DEFAULT_LEVEL, &quot;The tile index that was clicked &quot; + tileIndex);</span>
+<span class="nc" id="L176">        String regularMoveMessage = Header.MOVE_REGULAR + NetworkMessage.RESPONSE_HEADER_SPLIT_CHARACTER</span>
+                + tileIndex + NetworkMessage.RESPONSE_SPLIT_CHARACTER;
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (socketClient != null) {</span>
+<span class="nc" id="L179">            socketClient.sendStringToServer(regularMoveMessage);</span>
+        }
+<span class="nc" id="L181">    }</span>
+
+    public void acceptPlayersName(String name) {
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">        if (socketClient != null) {</span>
+<span class="nc" id="L185">            socketClient.sendStringToServer(name);</span>
+        }
+<span class="fc" id="L187">    }</span>
+
+    public void stopGameRunning() {
+<span class="nc" id="L190">        isGameRunning = false;</span>
+<span class="nc" id="L191">    }</span>
+
+    public void setScoreListView(ListView&lt;String&gt; scoreListView) {
+<span class="fc" id="L194">        this.scoreListView = scoreListView;</span>
+<span class="fc" id="L195">    }</span>
+
+    void displayScore(String score) {
+<span class="fc" id="L198">        scoreListView.getItems().add(score);</span>
+<span class="fc" id="L199">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

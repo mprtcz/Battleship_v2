@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BattleshipServer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.server</a> &gt; <span class="el_source">BattleshipServer.java</span></div><h1>BattleshipServer.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.server;
+
+import com.spanish_inquisition.battleship.server.bus.MessageBus;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+
+import static com.spanish_inquisition.battleship.common.AppLogger.DEFAULT_LEVEL;
+import static com.spanish_inquisition.battleship.common.AppLogger.initializeLogger;
+import static com.spanish_inquisition.battleship.common.AppLogger.logger;
+
+public class BattleshipServer {
+<span class="fc" id="L17">    private static final Integer PORT_NUMBER = 6666;</span>
+    static final int NUMBER_OF_PLAYERS = 2;
+    public static final int SERVER_ID = 0;
+    private MessageBus requestBus;
+    List&lt;ClientConnectionHandler&gt; clients;
+
+<span class="fc" id="L23">    public BattleshipServer() {</span>
+<span class="fc" id="L24">        requestBus = new MessageBus();</span>
+<span class="fc" id="L25">    }</span>
+
+    void proceed() {
+<span class="nc" id="L28">        initializeLogger();</span>
+<span class="nc" id="L29">        connectWithPlayers(createServerSocket(PORT_NUMBER));</span>
+<span class="nc" id="L30">        BattleshipGame game = new BattleshipGame(clients, requestBus);</span>
+<span class="nc" id="L31">        game.proceed();</span>
+<span class="nc" id="L32">    }</span>
+
+    ServerSocket createServerSocket(int portNumber) {
+<span class="fc" id="L35">        ServerSocket serverSocket = null;</span>
+        try {
+<span class="fc" id="L37">            serverSocket = new ServerSocket(portNumber);</span>
+<span class="fc" id="L38">            logger.log(DEFAULT_LEVEL, &quot;IP ADDRESS OF THE SERVER: &quot; +</span>
+<span class="fc" id="L39">                    InetAddress.getLocalHost().toString().split(&quot;/&quot;)[1]);</span>
+<span class="nc" id="L40">        } catch (IOException e) {</span>
+<span class="nc" id="L41">            logger.log(Level.WARNING, &quot;could't create server socket&quot;, e);</span>
+<span class="fc" id="L42">        }</span>
+<span class="fc" id="L43">        return serverSocket;</span>
+    }
+
+    void connectWithPlayers(ServerSocket serverSocket) {
+<span class="fc" id="L47">        clients = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        for (int i = 1; i &lt; NUMBER_OF_PLAYERS + 1; i++) {</span>
+<span class="fc" id="L49">            ClientConnectionHandler clientConnectionHandler = null;</span>
+            try {
+<span class="fc" id="L51">                clientConnectionHandler = new ClientConnectionHandler(i, requestBus);</span>
+<span class="fc" id="L52">                clientConnectionHandler.initializeSocket(serverSocket);</span>
+<span class="fc" id="L53">                clientConnectionHandler.setUpStreams();</span>
+<span class="fc" id="L54">                clientConnectionHandler.start();</span>
+<span class="nc" id="L55">            } catch (IOException e) {</span>
+<span class="nc" id="L56">                logger.log(Level.WARNING, &quot;couldn't accept connection from client&quot;, e);</span>
+<span class="fc" id="L57">            }</span>
+<span class="fc" id="L58">            clients.add(clientConnectionHandler);</span>
+        }
+<span class="fc" id="L60">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

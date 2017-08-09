@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ShotState.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.server.game_states</a> &gt; <span class="el_source">ShotState.java</span></div><h1>ShotState.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.server.game_states;
+
+import com.spanish_inquisition.battleship.common.Header;
+import com.spanish_inquisition.battleship.common.NetworkMessage;
+import com.spanish_inquisition.battleship.server.Player;
+import com.spanish_inquisition.battleship.server.Players;
+import com.spanish_inquisition.battleship.server.bus.MessageBuilder;
+import com.spanish_inquisition.battleship.server.bus.MessageBus;
+import com.spanish_inquisition.battleship.server.fleet.Ship;
+
+import static com.spanish_inquisition.battleship.server.BattleshipServer.SERVER_ID;
+
+public class ShotState extends GameState {
+    ShotState(final Players players, final MessageBus requestBus) {
+<span class="fc" id="L15">        super(players, requestBus);</span>
+<span class="fc" id="L16">    }</span>
+
+    @Override
+    public GameState transform() {
+<span class="fc" id="L20">        Player currentPlayer = getCurrentPlayer();</span>
+
+<span class="fc bfc" id="L22" title="All 2 branches covered.">        if (!shootIfPlayerSentValidMessage(currentPlayer)) {</span>
+<span class="pc bpc" id="L23" title="1 of 2 branches missed.">            return !didPlayerWon(currentPlayer)</span>
+                    ? this
+                    : new ResultState(
+                    players, requestBus);
+        }
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        return !didPlayerWon(currentPlayer)</span>
+                ? new PlayerActionState(
+                players, requestBus)
+                : new ResultState(
+                players, requestBus);
+    }
+
+    private boolean didPlayerWon(final Player player) {
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">        if (players.getOpponentOf(player).hasNoFleet()) {</span>
+<span class="nc" id="L37">            players.setWinner(player);</span>
+<span class="nc" id="L38">            return true;</span>
+        }
+<span class="fc" id="L40">        return false;</span>
+    }
+
+    private boolean shootIfPlayerSentValidMessage(final Player player) {
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (requestBus.haveMessageFromSender(player.getPlayerId())) {</span>
+<span class="fc" id="L45">            String shotMessage = getMessageContentFromPlayer(player);</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">            if (shotMessage.contains(Header.MOVE_REGULAR.name())) {</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">                if (shotExecution(shotMessage, player)) {</span>
+<span class="nc" id="L48">                    return false;</span>
+                }
+<span class="fc" id="L50">                players.switchCurrentPlayer();</span>
+<span class="fc" id="L51">                return true;</span>
+            }
+        }
+<span class="fc" id="L54">        return false;</span>
+    }
+
+    private boolean shotExecution(
+            final String messageContent, final Player player) {
+<span class="fc" id="L59">        Integer targetedPoint = Integer.valueOf(messageContent.substring(</span>
+<span class="fc" id="L60">                messageContent.indexOf(</span>
+                        NetworkMessage.RESPONSE_HEADER_SPLIT_CHARACTER) + 1,
+<span class="fc" id="L62">                messageContent.indexOf(</span>
+                        NetworkMessage.RESPONSE_SPLIT_CHARACTER)
+        ));
+
+<span class="fc" id="L66">        Player opponent = players.getOpponentOf(player);</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if (opponent.fleetGotHit(targetedPoint)) {</span>
+<span class="nc" id="L68">            notifyPlayersAboutHit(player, opponent, targetedPoint);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">            if (opponent.gotDestroyedShip()) {</span>
+<span class="nc" id="L70">                notifyPlayersAboutDestroyedShip(</span>
+                        player,
+                        opponent,
+<span class="nc" id="L73">                        opponent.pullDestroyedShip()</span>
+                );
+            }
+<span class="nc" id="L76">            return true;</span>
+        }
+<span class="fc" id="L78">        notifyPlayersAboutMiss(player, opponent, targetedPoint);</span>
+
+<span class="fc" id="L80">        return false;</span>
+    }
+
+    private void notifyPlayersAboutDestroyedShip(
+            final Player player, final Player opponent, final Ship ship) {
+<span class="nc" id="L85">        requestBus.addMessage(</span>
+                new MessageBuilder(
+<span class="nc" id="L87">                        SERVER_ID,</span>
+<span class="nc" id="L88">                        player.getPlayerId()</span>
+<span class="nc" id="L89">                ).buildResponseDestroyedShipMessage(ship).getMessage()</span>
+        );
+<span class="nc" id="L91">        requestBus.addMessage(</span>
+                new MessageBuilder(
+<span class="nc" id="L93">                        SERVER_ID,</span>
+<span class="nc" id="L94">                        opponent.getPlayerId()</span>
+<span class="nc" id="L95">                ).buildResponseOpponentDestroyedShipMessage(ship).getMessage()</span>
+        );
+<span class="nc" id="L97">    }</span>
+
+    private void notifyPlayersAboutHit(
+            final Player player,
+            final Player opponent,
+            final Integer targetedPoint) {
+<span class="nc" id="L103">        requestBus.addMessage(</span>
+                new MessageBuilder(
+<span class="nc" id="L105">                        SERVER_ID,</span>
+<span class="nc" id="L106">                        player.getPlayerId()</span>
+<span class="nc" id="L107">                ).buildResponseHitMessage(targetedPoint).getMessage()</span>
+        );
+<span class="nc" id="L109">        requestBus.addMessage(</span>
+                new MessageBuilder(
+<span class="nc" id="L111">                        SERVER_ID,</span>
+<span class="nc" id="L112">                        opponent.getPlayerId()</span>
+<span class="nc" id="L113">                ).buildResponseOpponentHitMessage(targetedPoint).getMessage()</span>
+        );
+<span class="nc" id="L115">    }</span>
+
+    private void notifyPlayersAboutMiss(
+            final Player player,
+            final Player opponent,
+            final Integer targetedPoint) {
+<span class="fc" id="L121">        requestBus.addMessage(</span>
+                new MessageBuilder(
+<span class="fc" id="L123">                        SERVER_ID,</span>
+<span class="fc" id="L124">                        player.getPlayerId()</span>
+<span class="fc" id="L125">                ).buildResponseMissMessage(targetedPoint).getMessage()</span>
+        );
+<span class="fc" id="L127">        requestBus.addMessage(</span>
+                new MessageBuilder(
+<span class="fc" id="L129">                        SERVER_ID,</span>
+<span class="fc" id="L130">                        opponent.getPlayerId()</span>
+<span class="fc" id="L131">                ).buildResponseOpponentMissMessage(targetedPoint).getMessage()</span>
+        );
+<span class="fc" id="L133">    }</span>
+
+    private Player getCurrentPlayer() {
+<span class="fc" id="L136">        return players.getCurrentPlayer();</span>
+    }
+
+    private String getMessageContentFromPlayer(final Player player) {
+<span class="fc" id="L140">        return requestBus.getMessageFrom(player.getPlayerId()).getContent();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

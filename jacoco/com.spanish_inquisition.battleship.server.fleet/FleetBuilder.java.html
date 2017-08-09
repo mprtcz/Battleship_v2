@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FleetBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.server.fleet</a> &gt; <span class="el_source">FleetBuilder.java</span></div><h1>FleetBuilder.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.server.fleet;
+
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="fc" id="L6">public class FleetBuilder {</span>
+    public Fleet build(String fleetMessage) {
+<span class="fc" id="L8">        List&lt;Integer&gt; shipsFields = FleetParser.parseMessageToIntegersList(fleetMessage);</span>
+<span class="pc bpc" id="L9" title="1 of 2 branches missed.">        if (shipsFields.size() == 20) {</span>
+<span class="fc" id="L10">            return new Fleet(extractShipsFromList(shipsFields));</span>
+        } else {
+<span class="nc" id="L12">            return null;</span>
+        }
+    }
+
+    private List&lt;Ship&gt; extractShipsFromList(List&lt;Integer&gt; shipsFields) {
+<span class="fc" id="L17">        List&lt;Ship&gt; ships = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L18">        ships.addAll(createOneMastsFromFieldsList(shipsFields));</span>
+<span class="fc" id="L19">        ships.addAll(createTwoMastsFromFieldsList(shipsFields));</span>
+<span class="fc" id="L20">        ships.addAll(createThreeMastsFromFieldsList(shipsFields));</span>
+<span class="fc" id="L21">        ships.add(createFourMastFromFieldsList(shipsFields));</span>
+<span class="fc" id="L22">        return ships;</span>
+    }
+
+    private List&lt;OneMast&gt; createOneMastsFromFieldsList(List&lt;Integer&gt; shipsFields) {
+<span class="fc" id="L26">        List&lt;OneMast&gt; oneMasts = new ArrayList&lt;&gt;(4);</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        for (int i = 0; i &lt; 4; i++) {</span>
+<span class="fc" id="L28">            List&lt;Integer&gt; oneMastPoint = new ArrayList&lt;&gt;(1);</span>
+<span class="fc" id="L29">            oneMastPoint.add(shipsFields.get(0));</span>
+<span class="fc" id="L30">            oneMasts.add(new OneMast(oneMastPoint));</span>
+<span class="fc" id="L31">            shipsFields.remove(0);</span>
+        }
+<span class="fc" id="L33">        return oneMasts;</span>
+    }
+
+    private List&lt;TwoMast&gt; createTwoMastsFromFieldsList(List&lt;Integer&gt; shipsFields) {
+<span class="fc" id="L37">        List&lt;TwoMast&gt; twoMasts = new ArrayList&lt;&gt;(3);</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        for (int i = 0; i &lt; 3; i++) {</span>
+<span class="fc" id="L39">            twoMasts.add(extractNewTwoMast(shipsFields));</span>
+        }
+<span class="fc" id="L41">        return twoMasts;</span>
+    }
+
+    private TwoMast extractNewTwoMast(List&lt;Integer&gt; shipsFields) {
+<span class="fc" id="L45">        List&lt;Integer&gt; twoMastFields = new ArrayList&lt;&gt;(2);</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        for (int i = 0; i &lt; 2; i++) {</span>
+<span class="fc" id="L47">            twoMastFields.add(shipsFields.get(0));</span>
+<span class="fc" id="L48">            shipsFields.remove(0);</span>
+        }
+<span class="fc" id="L50">        return new TwoMast(twoMastFields);</span>
+    }
+
+    private List&lt;ThreeMast&gt; createThreeMastsFromFieldsList(List&lt;Integer&gt; shipsFields) {
+<span class="fc" id="L54">        List&lt;ThreeMast&gt; threeMasts = new ArrayList&lt;&gt;(2);</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        for (int i = 0; i &lt; 2; i++) {</span>
+<span class="fc" id="L56">            threeMasts.add(extractNewThreeMast(shipsFields));</span>
+        }
+<span class="fc" id="L58">        return threeMasts;</span>
+    }
+
+    private ThreeMast extractNewThreeMast(List&lt;Integer&gt; shipsFields) {
+<span class="fc" id="L62">        List&lt;Integer&gt; threeMastFields = new ArrayList&lt;&gt;(3);</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (int i = 0; i &lt; 3; i++) {</span>
+<span class="fc" id="L64">            threeMastFields.add(shipsFields.get(0));</span>
+<span class="fc" id="L65">            shipsFields.remove(0);</span>
+        }
+<span class="fc" id="L67">        return new ThreeMast(threeMastFields);</span>
+    }
+
+    private FourMast createFourMastFromFieldsList(List&lt;Integer&gt; shipsFields) {
+<span class="fc" id="L71">        List&lt;Integer&gt; fourMastFields = new ArrayList&lt;&gt;(4);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        for (int i = 0; i &lt; 4; i++) {</span>
+<span class="fc" id="L73">            fourMastFields.add(shipsFields.get(0));</span>
+<span class="fc" id="L74">            shipsFields.remove(0);</span>
+        }
+<span class="fc" id="L76">        return new FourMast(fourMastFields);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

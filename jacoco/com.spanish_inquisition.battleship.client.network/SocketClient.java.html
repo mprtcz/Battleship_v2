@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SocketClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.client.network</a> &gt; <span class="el_source">SocketClient.java</span></div><h1>SocketClient.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.client.network;
+
+import com.spanish_inquisition.battleship.common.AppLogger;
+import com.spanish_inquisition.battleship.common.Header;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.spanish_inquisition.battleship.common.AppLogger.DEFAULT_LEVEL;
+
+/**
+ * @author Michal_Partacz
+ */
+public class SocketClient {
+<span class="fc" id="L22">    static int PORT = 6666;</span>
+<span class="fc" id="L23">    private static final Logger logger = Logger.getLogger(AppLogger.class.getName());</span>
+    private static final int THREAD_TIMEOUT = 3_000; //[ms]
+
+    Socket socket;
+    BufferedReader input;
+    PrintWriter output;
+<span class="fc" id="L29">    private ResponsesBus responsesBus = new ResponsesBus();</span>
+<span class="fc" id="L30">    private boolean isRunning = true;</span>
+    Thread updatesThread;
+
+<span class="fc" id="L33">    SocketClient() {</span>
+<span class="fc" id="L34">    }</span>
+
+    public ResponsesBus getResponsesBus() {
+<span class="nc" id="L37">        return responsesBus;</span>
+    }
+
+    void setUpStreamsOnSocket() throws IOException {
+<span class="fc" id="L41">        logger.log(DEFAULT_LEVEL, &quot;Setting up streams and socket&quot;);</span>
+<span class="fc" id="L42">        input = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));</span>
+<span class="fc" id="L43">        output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);</span>
+<span class="fc" id="L44">    }</span>
+
+    public static SocketClient createSocketClientWithSocket(String hostName, int port) throws IOException {
+<span class="fc" id="L47">        SocketClient socketClient = new SocketClient();</span>
+<span class="nc" id="L48">        socketClient.socket = new Socket(hostName, port);</span>
+<span class="nc" id="L49">        socketClient.setUpStreamsOnSocket();</span>
+<span class="nc" id="L50">        socketClient.createUpdatesThreadAndRunIt();</span>
+<span class="nc" id="L51">        return socketClient;</span>
+    }
+
+    public void createUpdatesThreadAndRunIt() {
+<span class="fc" id="L55">        logger.log(DEFAULT_LEVEL, &quot;Creating a thread for reading server updates&quot;);</span>
+<span class="fc" id="L56">        updatesThread = new Thread(this::readServerUpdatesContinuously);</span>
+<span class="fc" id="L57">        updatesThread.start();</span>
+<span class="fc" id="L58">    }</span>
+
+    private void readServerUpdatesContinuously() {
+<span class="fc" id="L61">        logger.log(DEFAULT_LEVEL, &quot;Reading server updates continously&quot;);</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        while (isRunning) {</span>
+            try {
+<span class="nc" id="L64">                this.responsesBus.addAServerResponse(readUpdateFromServer());</span>
+<span class="nc" id="L65">                Thread.sleep(100);</span>
+<span class="nc" id="L66">            } catch (IOException | InterruptedException e) {</span>
+<span class="nc" id="L67">                logger.log(DEFAULT_LEVEL, &quot;An exception while reading server responses: &quot;, e);</span>
+<span class="nc" id="L68">                break;</span>
+<span class="nc" id="L69">            }</span>
+        }
+<span class="fc" id="L71">    }</span>
+
+    String readUpdateFromServer() throws IOException {
+<span class="pc bpc" id="L74" title="2 of 6 branches missed.">        if (socket != null &amp;&amp; output != null &amp;&amp; input != null) {</span>
+<span class="fc" id="L75">            return input.readLine();</span>
+        }
+<span class="fc" id="L77">        return &quot;&quot;;</span>
+    }
+
+    public void closeTheSocketClient() {
+        try {
+<span class="fc" id="L82">            sendStringToServer(Header.EXIT.toString());</span>
+<span class="fc" id="L83">            isRunning = false;</span>
+<span class="fc" id="L84">            updatesThread.join(THREAD_TIMEOUT);</span>
+<span class="fc" id="L85">            updatesThread.interrupt();</span>
+<span class="fc" id="L86">            output.close();</span>
+<span class="fc" id="L87">            input.close();</span>
+<span class="fc" id="L88">            socket.close();</span>
+<span class="nc" id="L89">        } catch (IOException | InterruptedException e) {</span>
+<span class="nc" id="L90">            logger.log(DEFAULT_LEVEL, &quot;An exception while closing the SocketClient: &quot;, e);</span>
+<span class="fc" id="L91">        }</span>
+<span class="fc" id="L92">    }</span>
+
+    public void sendStringToServer(String string) {
+        try {
+<span class="fc" id="L96">            logger.log(DEFAULT_LEVEL, &quot;Attempting sent string to server = &quot; + string);</span>
+<span class="fc" id="L97">            this.output.println(string);</span>
+<span class="fc" id="L98">            logger.log(DEFAULT_LEVEL, &quot;Sent string to server = &quot; + string);</span>
+<span class="fc" id="L99">        } catch (NullPointerException e) {</span>
+<span class="fc" id="L100">            logger.log(Level.WARNING, &quot;Could not send &quot; + string + &quot; to server&quot;, e);</span>
+<span class="fc" id="L101">        }</span>
+<span class="fc" id="L102">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

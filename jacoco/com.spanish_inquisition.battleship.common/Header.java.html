@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Header.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.common</a> &gt; <span class="el_source">Header.java</span></div><h1>Header.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.common;
+
+import java.util.logging.Level;
+
+import static com.spanish_inquisition.battleship.common.AppLogger.logger;
+
+/**
+ * @author Michal_Partacz
+ * A enum that will be sent with the requests and response to ther server, a server will identify the message by it's
+ * header value
+ */
+<span class="fc" id="L12">public enum Header {</span>
+<span class="fc" id="L13">    EXIT,</span>
+<span class="fc" id="L14">    NAME,</span>
+<span class="fc" id="L15">    UNKNOWN,</span>
+<span class="fc" id="L16">    FLEET_REQUEST,</span>
+<span class="fc" id="L17">    FLEET_INVALID,</span>
+<span class="fc" id="L18">    FLEET_VALID,</span>
+<span class="fc" id="L19">    PLAYER_TURN,</span>
+<span class="fc" id="L20">    OPPONENT_TURN,</span>
+<span class="fc" id="L21">    GAME_WON,</span>
+<span class="fc" id="L22">    SCORE,</span>
+<span class="fc" id="L23">    DECIDE_ON_MOVE,</span>
+<span class="fc" id="L24">    MOVE_REGULAR,</span>
+<span class="fc" id="L25">    RESPONSE_HIT,</span>
+<span class="fc" id="L26">    RESPONSE_OPPONENT_HIT,</span>
+<span class="fc" id="L27">    RESPONSE_MISS,</span>
+<span class="fc" id="L28">    RESPONSE_OPPONENT_MISS,</span>
+<span class="fc" id="L29">    RESPONSE_DESTROYED_SHIP,</span>
+<span class="fc" id="L30">    RESPONSE_OPPONENT_DESTROYED_SHIP;</span>
+
+    /**
+     * A method which will return a Header enum for an input string. In case there is no enum that can be inferred from
+     * the string, it will return an UNKNOWN enum value.
+     *
+     * @param responseHeader a string which corresponds to the Headers name
+     * @return a Header enum value parsed from the string
+     */
+    public static Header parseResponseHeader(String responseHeader) {
+        Header header;
+        try {
+<span class="fc" id="L42">            header = valueOf(responseHeader);</span>
+<span class="fc" id="L43">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L44">            logger.log(Level.WARNING, e.getMessage());</span>
+<span class="fc" id="L45">            header = UNKNOWN;</span>
+<span class="fc" id="L46">        }</span>
+<span class="fc" id="L47">        return header;</span>
+    }
+
+    public static boolean isResponseFieldChanging(Header header) {
+        // implement HIT / MISS / DESTROYED headers and return true if the header is one of those
+<span class="nc" id="L52">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

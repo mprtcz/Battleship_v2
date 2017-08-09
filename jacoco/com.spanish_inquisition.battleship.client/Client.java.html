@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Client.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.client</a> &gt; <span class="el_source">Client.java</span></div><h1>Client.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.client;
+
+import com.spanish_inquisition.battleship.common.AppLogger;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.util.List;
+
+/**
+ * @author Michal_Partacz
+ * A main class for Client which will load the fxml file containing the UI's elements and shows them on the new window.
+ * The class also contains information about the window's height and width
+ */
+<span class="nc" id="L17">public class Client extends Application {</span>
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+<span class="nc" id="L21">        FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/client/MainMenu.fxml&quot;));</span>
+<span class="nc" id="L22">        Parent root = loader.load();</span>
+
+<span class="nc" id="L24">        Scene scene = new Scene(root);</span>
+<span class="nc" id="L25">        setUpPortAndIpInController(loader);</span>
+<span class="nc" id="L26">        primaryStage.setTitle(&quot;Battleships&quot;);</span>
+<span class="nc" id="L27">        primaryStage.setScene(scene);</span>
+<span class="nc" id="L28">        primaryStage.show();</span>
+<span class="nc" id="L29">    }</span>
+
+    public static void main(String[] args) {
+<span class="nc" id="L32">        AppLogger.initializeLogger();</span>
+<span class="nc" id="L33">        launch(args);</span>
+<span class="nc" id="L34">    }</span>
+
+    private void setUpPortAndIpInController(FXMLLoader loader) {
+<span class="nc" id="L37">        Parameters parameters = getParameters();</span>
+<span class="nc" id="L38">        List&lt;String&gt; argsRaw = parameters.getRaw();</span>
+<span class="nc" id="L39">        MainMenuController mainMenuController = loader.getController();</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        String serverIP = argsRaw.isEmpty() ? &quot;localhost&quot; : argsRaw.get(0);</span>
+<span class="nc" id="L41">        mainMenuController.setHostIP(serverIP);</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (argsRaw.size() &gt; 1) {</span>
+<span class="nc" id="L43">            int port = Integer.parseInt(argsRaw.get(1));</span>
+<span class="nc" id="L44">            mainMenuController.setPort(port);</span>
+        }
+<span class="nc" id="L46">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

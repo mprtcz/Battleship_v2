@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<rss version="0.91">
+  <channel>
+    <title>Battleship - Checkstyle report</title>
+    <link>${project.url}</link>
+    <description>Battleship - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2017</copyright>
+    <item>
+      <title>File: 49,
+             Errors: 0,
+             Warnings: 124,
+             Infos: 0
+      </title>
+            <link>${project.url}/checkstyle.html</link>
+      <description>
+        <p>Click <a href="${project.url}/checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.BattleshipServer.java">com/spanish_inquisition/battleship/server/BattleshipServer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.fleet.FleetBuilder.java">com/spanish_inquisition/battleship/server/fleet/FleetBuilder.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.game_states.EndState.java">com/spanish_inquisition/battleship/server/game_states/EndState.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.fleet.Ship.java">com/spanish_inquisition/battleship/server/fleet/Ship.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.bus.Message.java">com/spanish_inquisition/battleship/server/bus/Message.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.ClientConnectionHandler.java">com/spanish_inquisition/battleship/server/ClientConnectionHandler.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.MainMenuController.java">com/spanish_inquisition/battleship/client/MainMenuController.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  8
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.fleet.FleetParser.java">com/spanish_inquisition/battleship/server/fleet/FleetParser.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.board.boardcontroller.BoardController.java">com/spanish_inquisition/battleship/client/board/boardcontroller/BoardController.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.common.Styles.java">com/spanish_inquisition/battleship/common/Styles.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.board.boardcontroller.PlayerBoardController.java">com/spanish_inquisition/battleship/client/board/boardcontroller/PlayerBoardController.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.fleet.TwoMast.java">com/spanish_inquisition/battleship/server/fleet/TwoMast.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.Player.java">com/spanish_inquisition/battleship/server/Player.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.database.DatabaseController.java">com/spanish_inquisition/battleship/server/database/DatabaseController.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.Players.java">com/spanish_inquisition/battleship/server/Players.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.fleet.OneMast.java">com/spanish_inquisition/battleship/server/fleet/OneMast.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.fleet.FleetValidator.java">com/spanish_inquisition/battleship/server/fleet/FleetValidator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.ServerMain.java">com/spanish_inquisition/battleship/server/ServerMain.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.network.ResponsesBus.java">com/spanish_inquisition/battleship/client/network/ResponsesBus.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.game.Game.java">com/spanish_inquisition/battleship/client/game/Game.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.board.GameBoard.java">com/spanish_inquisition/battleship/client/board/GameBoard.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.Client.java">com/spanish_inquisition/battleship/client/Client.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.common.Header.java">com/spanish_inquisition/battleship/common/Header.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.bus.MessageBuilder.java">com/spanish_inquisition/battleship/server/bus/MessageBuilder.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.fleet.StringToStringArrayParser.java">com/spanish_inquisition/battleship/server/fleet/StringToStringArrayParser.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.game_states.PlacingShipsState.java">com/spanish_inquisition/battleship/server/game_states/PlacingShipsState.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.game.ServerMessageCreator.java">com/spanish_inquisition/battleship/client/game/ServerMessageCreator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.database.PlayerEntityController.java">com/spanish_inquisition/battleship/server/database/PlayerEntityController.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.game_states.ShotState.java">com/spanish_inquisition/battleship/server/game_states/ShotState.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.game.Fleet.java">com/spanish_inquisition/battleship/client/game/Fleet.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.board.GameBoardBuilder.java">com/spanish_inquisition/battleship/client/board/GameBoardBuilder.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.bus.MessageBus.java">com/spanish_inquisition/battleship/server/bus/MessageBus.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.board.BoardTile.java">com/spanish_inquisition/battleship/client/board/BoardTile.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.database.PlayerEntity.java">com/spanish_inquisition/battleship/server/database/PlayerEntity.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  8
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.fleet.FourMast.java">com/spanish_inquisition/battleship/server/fleet/FourMast.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.BattleshipGame.java">com/spanish_inquisition/battleship/server/BattleshipGame.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.game.FleetInitializer.java">com/spanish_inquisition/battleship/client/game/FleetInitializer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.game_states.ResultState.java">com/spanish_inquisition/battleship/server/game_states/ResultState.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.common.TileDirection.java">com/spanish_inquisition/battleship/common/TileDirection.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.common.AdjacentTilesCalc.java">com/spanish_inquisition/battleship/common/AdjacentTilesCalc.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.fleet.ThreeMast.java">com/spanish_inquisition/battleship/server/fleet/ThreeMast.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.fleet.Fleet.java">com/spanish_inquisition/battleship/server/fleet/Fleet.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.game_states.PlayerActionState.java">com/spanish_inquisition/battleship/server/game_states/PlayerActionState.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.server.game_states.GameState.java">com/spanish_inquisition/battleship/server/game_states/GameState.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.network.SocketClient.java">com/spanish_inquisition/battleship/client/network/SocketClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.StatusController.java">com/spanish_inquisition/battleship/client/StatusController.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.common.AppLogger.java">com/spanish_inquisition/battleship/common/AppLogger.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.client.board.boardcontroller.OpponentBoardController.java">com/spanish_inquisition/battleship/client/board/boardcontroller/OpponentBoardController.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="${project.url}/checkstyle.html#com.spanish_inquisition.battleship.common.NetworkMessage.java">com/spanish_inquisition/battleship/common/NetworkMessage.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+

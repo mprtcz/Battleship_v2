@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FleetParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.server.fleet</a> &gt; <span class="el_source">FleetParser.java</span></div><h1>FleetParser.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.server.fleet;
+
+import com.spanish_inquisition.battleship.common.NetworkMessage;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+
+import static com.spanish_inquisition.battleship.common.AppLogger.logger;
+
+<span class="nc" id="L11">class FleetParser {</span>
+
+    static List&lt;Integer&gt; parseMessageToIntegersList(String message) {
+<span class="fc" id="L14">        String[] messageSplitted = message.split(String.valueOf(NetworkMessage.RESPONSE_HEADER_SPLIT_CHARACTER));</span>
+<span class="fc" id="L15">        return parseStringArrayToIntegerList(StringToStringArrayParser.parse(messageSplitted[1]));</span>
+    }
+
+    private static List&lt;Integer&gt; parseStringArrayToIntegerList(String[] fleet) {
+<span class="fc" id="L19">        List&lt;Integer&gt; intList = new ArrayList&lt;&gt;(fleet.length);</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        for (String shipIndex : fleet) {</span>
+            try {
+<span class="fc" id="L22">                intList.add(Integer.parseInt(shipIndex));</span>
+<span class="nc" id="L23">            } catch (NumberFormatException e) {</span>
+<span class="nc" id="L24">                logger.log(Level.WARNING, &quot;wrong number format&quot;, e);</span>
+<span class="fc" id="L25">            }</span>
+        }
+<span class="fc" id="L27">        return intList;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

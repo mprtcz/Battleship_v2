@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameBoardBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.client.board</a> &gt; <span class="el_source">GameBoardBuilder.java</span></div><h1>GameBoardBuilder.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.client.board;
+
+import com.spanish_inquisition.battleship.client.board.boardcontroller.BoardController;
+import com.spanish_inquisition.battleship.client.board.boardcontroller.OpponentBoardController;
+import com.spanish_inquisition.battleship.client.board.boardcontroller.PlayerBoardController;
+import com.spanish_inquisition.battleship.common.AdjacentTilesCalc;
+import com.spanish_inquisition.battleship.common.Styles;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author Michal_Partacz
+ * This class will make sure the board of buttons is properly initialized and with every event handlers needed.
+ */
+public class GameBoardBuilder {
+    public static final int BOARD_SIZE_WITH_LABELS = 11;
+    private static final double FIELD_SIZE = 30;
+    GridPane gridPane;
+    private BoardController boardController;
+<span class="pc" id="L30">    private Map&lt;Integer, Label&gt; verticalLabels = new HashMap&lt;&gt;();</span>
+<span class="pc" id="L31">    private Map&lt;Integer, Label&gt; horizontalLabels = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L33">    public GameBoardBuilder(PlayerBoardController boardController) {</span>
+<span class="fc" id="L34">        this.boardController = boardController;</span>
+<span class="fc" id="L35">        this.gridPane = boardController.getBoardGridPane();</span>
+<span class="fc" id="L36">    }</span>
+
+<span class="nc" id="L38">    public GameBoardBuilder(OpponentBoardController boardController) {</span>
+<span class="nc" id="L39">        this.boardController = boardController;</span>
+<span class="nc" id="L40">        this.gridPane = boardController.getBoardGridPane();</span>
+<span class="nc" id="L41">    }</span>
+
+    public void fillTheBoardWithButtonsAndLabels() {
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        for (int column = 0; column &lt; BOARD_SIZE_WITH_LABELS; column++) {</span>
+<span class="fc" id="L45">            Platform.runLater(() -&gt; gridPane.getRowConstraints().add(new RowConstraints(FIELD_SIZE)));</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">            for (int row = 0; row &lt; BOARD_SIZE_WITH_LABELS; row++) {</span>
+<span class="fc bfc" id="L47" title="All 4 branches covered.">                if (column == 0 &amp;&amp; row == 0) {</span>
+<span class="fc" id="L48">                    Platform.runLater(() -&gt; gridPane.getColumnConstraints().add(new ColumnConstraints(FIELD_SIZE)));</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">                } else if (column == 0) {</span>
+<span class="fc" id="L50">                    Platform.runLater(() -&gt; gridPane.getColumnConstraints().add(new ColumnConstraints(FIELD_SIZE)));</span>
+<span class="fc" id="L51">                    addVerticalLabelOnIndex(row);</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">                } else if (row == 0) {</span>
+<span class="fc" id="L53">                    addHorizontalLabelOnIndex(column);</span>
+                } else {
+<span class="fc" id="L55">                    createNewBoardTileAndAddIt(column, row);</span>
+                }
+            }
+        }
+<span class="fc" id="L59">        addCorrespondingLabelsToTiles();</span>
+<span class="fc" id="L60">    }</span>
+
+    private void addCorrespondingLabelsToTiles() {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (Map.Entry&lt;Integer, BoardTile&gt; entry : boardController.getBoardsIndexTiles().entrySet()) {</span>
+<span class="fc" id="L64">            BoardTile tile = entry.getValue();</span>
+<span class="fc" id="L65">            int boardIndex = entry.getKey();</span>
+<span class="fc" id="L66">            int[] tileCoordinates = AdjacentTilesCalc.translateIndexToCoordinates(boardIndex);</span>
+<span class="fc" id="L67">            tile.setLabels(horizontalLabels.get(tileCoordinates[1] + 1), verticalLabels.get(tileCoordinates[0] + 1));</span>
+<span class="fc" id="L68">            setButtonsHoverOverEvents(tile);</span>
+<span class="fc" id="L69">        }</span>
+<span class="fc" id="L70">    }</span>
+
+    private void createNewBoardTileAndAddIt(int absoluteXCoordinate, int absoluteYCoordinate) {
+<span class="fc" id="L73">        int boardIndex = AdjacentTilesCalc.translateCoordinatesToIndex(absoluteXCoordinate - 1, absoluteYCoordinate - 1);</span>
+<span class="fc" id="L74">        BoardTile tile = new BoardTile(boardIndex);</span>
+<span class="fc" id="L75">        tile.setOnMouseClicked(getOnBoardTileClickedEvent(tile, boardController));</span>
+<span class="fc" id="L76">        Platform.runLater(() -&gt; this.gridPane.add(tile, absoluteXCoordinate, absoluteYCoordinate));</span>
+<span class="fc" id="L77">        boardController.getGameBoard().addBoardTileToHashMap(boardIndex, tile);</span>
+<span class="fc" id="L78">        fillGridPaneHeightAndWidthForNode(tile);</span>
+<span class="fc" id="L79">    }</span>
+
+    private void addHorizontalLabelOnIndex(int rowIndex) {
+<span class="fc" id="L82">        Label boardBoardTileLabel = buildCenteredLabelWithText(String.valueOf(rowIndex));</span>
+<span class="fc" id="L83">        Platform.runLater(() -&gt; this.gridPane.add(boardBoardTileLabel, 0, rowIndex));</span>
+<span class="fc" id="L84">        fillGridPaneHeightAndWidthForNode(boardBoardTileLabel);</span>
+<span class="fc" id="L85">        horizontalLabels.put(rowIndex, boardBoardTileLabel);</span>
+<span class="fc" id="L86">    }</span>
+
+    private void addVerticalLabelOnIndex(int columnIndex) {
+<span class="fc" id="L89">        Label boardBoardTileLabel = buildCenteredLabelWithText(String.valueOf((char) ('A' + columnIndex - 1)));</span>
+<span class="fc" id="L90">        Platform.runLater(() -&gt; this.gridPane.add(boardBoardTileLabel, columnIndex, 0));</span>
+<span class="fc" id="L91">        fillGridPaneHeightAndWidthForNode(boardBoardTileLabel);</span>
+<span class="fc" id="L92">        verticalLabels.put(columnIndex, boardBoardTileLabel);</span>
+<span class="fc" id="L93">    }</span>
+
+    private void fillGridPaneHeightAndWidthForNode(Node node) {
+<span class="fc" id="L96">        GridPane.setFillHeight(node, true);</span>
+<span class="fc" id="L97">        GridPane.setFillWidth(node, true);</span>
+<span class="fc" id="L98">    }</span>
+
+    private Label buildCenteredLabelWithText(String text) {
+<span class="fc" id="L101">        Label boardBoardTileLabel = new Label(text);</span>
+<span class="fc" id="L102">        boardBoardTileLabel.setAlignment(Pos.CENTER);</span>
+<span class="fc" id="L103">        boardBoardTileLabel.setMaxSize(200, 200);</span>
+<span class="fc" id="L104">        return boardBoardTileLabel;</span>
+    }
+
+    private EventHandler&lt;MouseEvent&gt; getOnBoardTileClickedEvent(BoardTile tile, BoardController boardController) {
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if (boardController instanceof PlayerBoardController) {</span>
+<span class="fc" id="L109">            return event -&gt; {</span>
+<span class="nc" id="L110">            }; //TODO player impl</span>
+        } else {
+<span class="nc" id="L112">            return event -&gt; boardController.getGame().makeAMove(tile.getBoardIndex());</span>
+        }
+    }
+
+    private void setButtonsHoverOverEvents(BoardTile tile) {
+<span class="pc" id="L117">        tile.setOnMouseEntered(event -&gt; tile.setTileStyle(Styles.TEXT_LIME));</span>
+<span class="pc" id="L118">        tile.setOnMouseExited(event -&gt; tile.setTileStyle(Styles.TEXT_BLACK));</span>
+<span class="fc" id="L119">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClientConnectionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.server</a> &gt; <span class="el_source">ClientConnectionHandler.java</span></div><h1>ClientConnectionHandler.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.server;
+
+import com.spanish_inquisition.battleship.common.Header;
+import com.spanish_inquisition.battleship.server.bus.MessageBus;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
+
+import static com.spanish_inquisition.battleship.common.AppLogger.DEFAULT_LEVEL;
+import static com.spanish_inquisition.battleship.common.AppLogger.logger;
+import static com.spanish_inquisition.battleship.server.BattleshipServer.SERVER_ID;
+
+public class ClientConnectionHandler extends Thread {
+    String name;
+    private Socket clientSocket;
+    private BufferedReader clientInput;
+    private PrintWriter clientOutput;
+    private final int clientId;
+    private MessageBus requestBus;
+    private boolean isConnected;
+
+<span class="fc" id="L29">    public ClientConnectionHandler(final int clientId, MessageBus requestBus) {</span>
+<span class="fc" id="L30">        this.clientId = clientId;</span>
+<span class="fc" id="L31">        this.requestBus = requestBus;</span>
+<span class="fc" id="L32">        this.isConnected = true;</span>
+<span class="fc" id="L33">    }</span>
+
+    int getClientId() {
+<span class="fc" id="L36">        return clientId;</span>
+    }
+
+    void disconnect() {
+<span class="fc" id="L40">        isConnected = false;</span>
+<span class="fc" id="L41">    }</span>
+
+    public void initializeSocket(final ServerSocket serverSocket) throws IOException {
+<span class="fc" id="L44">        clientSocket = serverSocket.accept();</span>
+<span class="fc" id="L45">    }</span>
+
+    void setUpStreams() throws IOException {
+<span class="fc" id="L48">        clientInput = new BufferedReader(</span>
+<span class="fc" id="L49">                new InputStreamReader(clientSocket.getInputStream(),</span>
+                        StandardCharsets.UTF_8));
+<span class="fc" id="L51">        clientOutput = new PrintWriter(</span>
+<span class="fc" id="L52">                new OutputStreamWriter(clientSocket.getOutputStream(),</span>
+                        StandardCharsets.UTF_8), true);
+<span class="fc" id="L54">    }</span>
+
+    public void run() {
+<span class="fc" id="L57">        name = acceptNameFromClient();</span>
+
+<span class="pc bpc" id="L59" title="1 of 4 branches missed.">        while (clientSocket.isConnected() &amp;&amp; isConnected) {</span>
+<span class="fc" id="L60">            sendMessageToUser(clientOutput);</span>
+<span class="fc" id="L61">            getMessageFromUser(clientInput);</span>
+            try {
+<span class="fc" id="L63">                Thread.sleep(100);</span>
+<span class="nc" id="L64">            } catch (InterruptedException e) {</span>
+<span class="nc" id="L65">                Thread.currentThread().interrupt();</span>
+<span class="nc" id="L66">                logger.log(DEFAULT_LEVEL, name + &quot; client connection handler thread interrupted&quot;);</span>
+<span class="pc" id="L67">            }</span>
+        }
+<span class="fc" id="L69">    }</span>
+
+    private String acceptNameFromClient() {
+<span class="fc" id="L72">        String readName = &quot;&quot;;</span>
+        try {
+<span class="fc bfc" id="L74" title="All 2 branches covered.">            if (clientInput != null) {</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">                while (!clientInput.ready()) {</span>
+<span class="nc" id="L76">                    Thread.sleep(10);</span>
+                }
+<span class="fc" id="L78">                readName = clientInput.readLine();</span>
+            }
+<span class="nc" id="L80">        } catch (IOException | InterruptedException e) {</span>
+<span class="nc" id="L81">            logger.log(Level.WARNING, &quot;couldn't read name from client&quot;, e);</span>
+<span class="fc" id="L82">        }</span>
+<span class="fc" id="L83">        return readName;</span>
+    }
+
+    private void sendMessageToUser(PrintWriter output) {
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (output != null) {</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">            if (requestBus.haveMessageForRecipient(clientId)) {</span>
+<span class="nc" id="L89">                String messageToSend = requestBus.getMessageFor(clientId).getContent();</span>
+<span class="nc" id="L90">                logger.log(DEFAULT_LEVEL, &quot;Message to user &quot; + clientId + &quot;: &quot; + messageToSend);</span>
+<span class="nc" id="L91">                output.println(messageToSend);</span>
+            }
+        }
+<span class="fc" id="L94">    }</span>
+
+    private void getMessageFromUser(BufferedReader input) {
+        try {
+<span class="fc bfc" id="L98" title="All 2 branches covered.">            if (input != null) {</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">                if (input.ready()) {</span>
+<span class="nc" id="L100">                    String lineFromClient = input.readLine();</span>
+<span class="nc" id="L101">                    logger.log(DEFAULT_LEVEL, &quot;Message from client &quot; + clientId + &quot; &quot; + lineFromClient);</span>
+<span class="nc bnc" id="L102" title="All 4 branches missed.">                    if (lineFromClient != null &amp;&amp; lineFromClient.trim().equals(Header.EXIT.name())) {</span>
+<span class="nc" id="L103">                        isConnected = false;</span>
+                    } else {
+<span class="nc" id="L105">                        requestBus.addMessage(clientId, SERVER_ID, lineFromClient);</span>
+                    }
+                }
+            }
+<span class="nc" id="L109">        } catch (IOException e) {</span>
+<span class="nc" id="L110">            logger.log(Level.WARNING, &quot;Could't read message from user: &quot; + name + &quot; with ID: &quot; + clientId, e);</span>
+<span class="fc" id="L111">        }</span>
+<span class="fc" id="L112">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

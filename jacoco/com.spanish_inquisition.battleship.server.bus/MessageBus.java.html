@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MessageBus.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Battleship</a> &gt; <a href="index.source.html" class="el_package">com.spanish_inquisition.battleship.server.bus</a> &gt; <span class="el_source">MessageBus.java</span></div><h1>MessageBus.java</h1><pre class="source lang-java linenums">package com.spanish_inquisition.battleship.server.bus;
+
+import com.spanish_inquisition.battleship.common.AppLogger;
+import com.spanish_inquisition.battleship.common.Header;
+import com.spanish_inquisition.battleship.common.NetworkMessage;
+import com.spanish_inquisition.battleship.server.bus.Message;
+import com.spanish_inquisition.battleship.server.fleet.Ship;
+
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+public class MessageBus {
+    private Queue&lt;Message&gt; messageBus;
+
+<span class="fc" id="L17">    public MessageBus() {</span>
+<span class="fc" id="L18">        messageBus = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L19">        AppLogger.initializeLogger();</span>
+<span class="fc" id="L20">    }</span>
+
+    public void addMessage(Message message) {
+<span class="fc" id="L23">        messageBus.add(message);</span>
+<span class="fc" id="L24">    }</span>
+
+    public void addMessage(int senderId, int recipientId, String message) {
+<span class="fc" id="L27">        Message newMessage = new Message(senderId, recipientId, message);</span>
+<span class="fc" id="L28">        messageBus.add(newMessage);</span>
+<span class="fc" id="L29">    }</span>
+
+    public Message getMessageFor(int recipientId) {
+<span class="fc" id="L32">        Message msg = null;</span>
+<span class="fc" id="L33">        Iterator&lt;Message&gt; iterator = messageBus.iterator();</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L35">            Message current = iterator.next();</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">            if (current.isToRecipient(recipientId)) {</span>
+<span class="fc" id="L37">                msg = current;</span>
+<span class="fc" id="L38">                iterator.remove();</span>
+<span class="fc" id="L39">                break;</span>
+            }
+<span class="fc" id="L41">        }</span>
+<span class="fc" id="L42">        return msg;</span>
+    }
+
+    public Message getMessageFrom(int senderId) {
+        Optional&lt;Message&gt; optionalMessage;
+<span class="fc" id="L47">        optionalMessage = messageBus.stream()</span>
+<span class="fc" id="L48">                .filter(message -&gt; message.isFromSender(senderId)).findFirst();</span>
+        //removeAllSenderMessagesFromBus(senderId);
+        //messageBus.remove(optionalMessage);
+<span class="fc" id="L51">        Message message = optionalMessage.orElse(new Message(0, 0, &quot;&quot;));</span>
+<span class="fc" id="L52">        removeMessage(message);</span>
+<span class="fc" id="L53">        return message;</span>
+    }
+
+    private void removeMessage(Message forRemoveMessage) {
+<span class="fc" id="L57">        messageBus.removeIf(message -&gt; message.equals(forRemoveMessage));</span>
+<span class="fc" id="L58">    }</span>
+
+    private void removeAllSenderMessagesFromBus(int senderId) {
+<span class="nc" id="L61">        messageBus.removeIf(message -&gt; message.isFromSender(senderId));</span>
+<span class="nc" id="L62">    }</span>
+
+    public boolean haveMessageFromSender(int senderId) {
+<span class="fc" id="L65">        boolean isFromSender = false;</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">        if (messageBus != null) {</span>
+<span class="fc" id="L67">            isFromSender = messageBus.stream()</span>
+<span class="fc" id="L68">                    .anyMatch(message -&gt; message.isFromSender(senderId));</span>
+        }
+<span class="fc" id="L70">        return isFromSender;</span>
+    }
+
+    public boolean haveMessageForRecipient(int recipientId) {
+<span class="fc" id="L74">        boolean isForRecipient = false;</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (messageBus != null) {</span>
+<span class="fc" id="L76">            isForRecipient = messageBus.stream()</span>
+<span class="fc" id="L77">                    .anyMatch(message -&gt; message.isToRecipient(recipientId));</span>
+        }
+<span class="fc" id="L79">        return isForRecipient;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
