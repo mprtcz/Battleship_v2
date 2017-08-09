@@ -77,6 +77,7 @@ public class Game {
                 switch (message.getHeader()) {
                     case SCORE: {
                         //TODO impl display of score
+                        displayScore(message.getBody());
                         break;
                     }
                     case FLEET_VALID: {

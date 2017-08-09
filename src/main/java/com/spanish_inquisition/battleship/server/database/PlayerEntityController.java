@@ -23,6 +23,10 @@ public class PlayerEntityController {
         playerEntity = new PlayerEntity(player.getName());
     }
 
+    public PlayerEntityController(DatabaseController databaseController) {
+        this.databaseController = databaseController;
+    }
+
     public void incrementEntityScore() {
         playerEntity.incrementScore();
     }

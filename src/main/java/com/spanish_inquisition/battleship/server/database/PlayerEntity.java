@@ -39,8 +39,8 @@ public class PlayerEntity {
         return score;
     }
 
-    public int getId() {
-        return id;
+    public String getReadyToSendRepresentation() {
+        return name + " = " + score;
     }
 
     @Override

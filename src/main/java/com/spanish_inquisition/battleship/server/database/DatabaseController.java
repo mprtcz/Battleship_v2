@@ -20,19 +20,19 @@ public class DatabaseController {
         loadJDBCDriver();
     }
 
-    void saveOrUpdatePlayerEntity(PlayerEntity playerEntity) {
-        if (checkIfPlayerExists(playerEntity, loadPlayers())) {
-            updatePlayer(playerEntity);
-        } else {
-            savePlayer(playerEntity);
-        }
-    }
-
     private static void loadJDBCDriver() {
         try {
             Class.forName(JDBC_DRIVER);
         } catch (ClassNotFoundException e) {
             AppLogger.logger.log(Level.WARNING, "Exception occured", e);
+        }
+    }
+
+    void saveOrUpdatePlayerEntity(PlayerEntity playerEntity) {
+        if (checkIfPlayerExists(playerEntity, loadPlayers())) {
+            updatePlayer(playerEntity);
+        } else {
+            savePlayer(playerEntity);
         }
     }
 
