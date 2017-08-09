@@ -1,0 +1,22 @@
+language: java
+sudo: required
+before_script:
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+- sleep 3
+- git config --global user.name "mprtcz"
+- git config --global user.email "azet89@gmail.com"
+script:
+- mvn clean install
+- mvn site
+- ls -a
+deploy:
+  local_dir: target/site
+  provider: pages
+  skip_cleanup: true
+  github_token: $OAUTHKEY
+  on:
+    branch: db-further-work
+env:
+  global:
+    secure: Yfi2R5tpWLn4ZbueshSxzH7H8FfyjsjD+03qPAOn3tJKu5naQg9MnFV/AzQ7HYjsvL5HXQbd1mc5SKm2d/MJefKpstpycyYUSBTf49eKBZCbYdkhcCDwTr6szOVNotUbb+UzoW8isTIQyei31Dra4AsV3f4sQ+SEpxcIUwZX8sg+65V95QubTqLafFm/olUvOP3tz/ArVK2gyJHoAmQyw5CFoNjbxVbQcfJeZgoCpbOHteoPZ/RvWV1BYGdYhLnTGlHObu03bbpWTs88L8+ktzCySa9Dn+wO9+ezq9J1JIN4ETgrnOg/6gJocHriUty94lLCP7+rWKGmjVI3CRQP+DJtpdYzF/ynbrrYvc9Yovis/g7NIOw6t/GrrFpHRcR+J4nz2/PDY26sn78+UJlgdbEn5qMwXKjePELDXegUG4ouWOcUXORWYZibbN5idNDJY6WCnsrfUW+4yUdHqYWj5LS4RIM9XMsjHOF2YH9/NnJf0M7ooamR3/wN/GVKr6Hg0IIo2CABreF72l47uSJGAMFCLbexQJrGxIUqcYpnE0RBywfVrXk9bTGiVLrU04WqzjZJ8i8dcusrSrFx0IPG7e1QoDRxTdWMzNpdXVeRJI8dECRoDqsqF6e3iewo2Spu/ajNsIvyf/pf3nwzdcfHVVz9kGLOBnVvvxDUBslvDyc=
