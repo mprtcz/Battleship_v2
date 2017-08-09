@@ -1,8 +1,11 @@
 package com.spanish_inquisition.battleship.server.database;
 
+import com.spanish_inquisition.battleship.common.AppLogger;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Created by michal on 08.08.17.
@@ -13,8 +16,12 @@ public class DatabaseController {
     static final String TABLE_NAME = "players";
     static String DATABASE = "jdbc:sqlite:dbs/" + DB_NAME;
 
+    public DatabaseController() {
+        loadJDBCDriver();
+    }
+
     void saveOrUpdatePlayerEntity(PlayerEntity playerEntity) {
-        if(checkIfPlayerExists(playerEntity, loadPlayers())) {
+        if (checkIfPlayerExists(playerEntity, loadPlayers())) {
             updatePlayer(playerEntity);
         } else {
             savePlayer(playerEntity);
@@ -25,12 +32,11 @@ public class DatabaseController {
         try {
             Class.forName(JDBC_DRIVER);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            AppLogger.logger.log(Level.WARNING, "Exception occured", e);
         }
     }
 
     private void savePlayer(PlayerEntity playerEntity) {
-        loadJDBCDriver();
         try (Connection connection = DriverManager.getConnection(DATABASE);
              Statement statement = connection.createStatement()) {
             createTableIfNotExists(statement);
@@ -38,12 +44,11 @@ public class DatabaseController {
             setSaveStatementStrings(preparedStatement, playerEntity);
             preparedStatement.executeBatch();
         } catch (Exception e) {
-            e.printStackTrace();
+            AppLogger.logger.log(Level.WARNING, "Exception occured", e);
         }
     }
 
     private void updatePlayer(PlayerEntity playerEntity) {
-        loadJDBCDriver();
         try (Connection connection = DriverManager.getConnection(DATABASE);
              Statement statement = connection.createStatement()) {
             createTableIfNotExists(statement);
@@ -51,7 +56,7 @@ public class DatabaseController {
             setUpdateStatementStrings(preparedStatement, playerEntity);
             preparedStatement.executeBatch();
         } catch (Exception e) {
-            e.printStackTrace();
+            AppLogger.logger.log(Level.WARNING, "Exception occured", e);
         }
     }
 
@@ -75,19 +80,25 @@ public class DatabaseController {
     }
 
     List<PlayerEntity> loadPlayers() {
-        loadJDBCDriver();
         List<PlayerEntity> list = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(DATABASE);
              Statement statement = connection.createStatement()) {
             createTableIfNotExists(statement);
-            ResultSet resultSet = statement.executeQuery(String.format("select * from %s;", TABLE_NAME));
+            fillListWithResults(list, statement);
+        } catch (SQLException e) {
+            AppLogger.logger.log(Level.WARNING, "Exception occured", e);
+        }
+        return list;
+    }
+
+    private void fillListWithResults(List<PlayerEntity> list, Statement statement) {
+        try (ResultSet resultSet = statement.executeQuery(String.format("select * from %s;", TABLE_NAME))) {
             while (resultSet.next()) {
                 list.add(createPlayerFromResult(resultSet));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            AppLogger.logger.log(Level.WARNING, "Exception occured", e);
         }
-        return list;
     }
 
     private void createTableIfNotExists(Statement statement) throws SQLException {

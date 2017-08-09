@@ -1,15 +1,15 @@
 package com.spanish_inquisition.battleship.server.database;
 
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import javafx.embed.swing.JFXPanel;
+import org.testng.annotations.*;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -22,18 +22,28 @@ public class DatabaseControllerTest {
     private static final String DB_NAME = "history-test.db";
     private static final String TABLE_NAME = DatabaseController.TABLE_NAME;
 
+    @BeforeSuite
+    public void setupJavaFx() {
+        final CountDownLatch latch = new CountDownLatch(1);
+        SwingUtilities.invokeLater(() -> {
+            new JFXPanel(); // initializes JavaFX environment
+            latch.countDown();
+        });
+    }
+
+
     @BeforeClass
     public void setUpDBController() {
         databaseController = new DatabaseController();
         DatabaseController.JDBC_DRIVER = "org.h2.Driver";
-        DatabaseController.DATABASE = "jdbc:h2:./dbs/" +DB_NAME;
+        DatabaseController.DATABASE = "jdbc:h2:./dbs/" + DB_NAME;
     }
 
     @AfterMethod
     private void dropAfterMethod() {
         try (Connection connection = DriverManager.getConnection(DatabaseController.DATABASE);
              Statement statement = connection.createStatement()) {
-            statement.executeUpdate("drop table " +TABLE_NAME);
+            statement.executeUpdate("drop table " + TABLE_NAME);
         } catch (SQLException e) {
             e.printStackTrace();
         }
